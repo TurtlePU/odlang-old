@@ -1,0 +1,48 @@
+"Although it is strange, this file parses, too."
+"Multiline expressions are a thing in OdLang, although expressions are separated
+with either ';' or '\\n': in most cases, OdLang knows that expression was not
+terminated in the end of the line."
+
+someLongArithmetic +
+    remainingLongArithmetic
+
+canonic call,
+    chained,
+    calls
+
+!
+    (wow, do you even need that)
+
+show off with {
+    multiline lambdas ->
+    "Would you look at that!"
+}
+
+(
+    "Braces are fine, too"
+)
+
+what about bools man (
+    they, are, fine,
+    thanks,
+)
+
+(
+    then x <-
+        await stupidlyLongFuture
+)
+
+"If you really need a multiline expression which does not fit in cases above,
+just use a '\\'."
+
+method \
+    stupidlyLongObject
+
+method object argname \
+    stupidlyLongArgValue
+
+"P.S.: allowing newline between argument name and argument value is
+theoretically possible, but finding the error (e.g. when you forget that all
+arguments have names) would be stupid hard for the programmer because parser
+would report error somewhere after the real point of error, so it was decided to
+not add it in."

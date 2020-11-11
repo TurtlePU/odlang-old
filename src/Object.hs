@@ -40,7 +40,7 @@ pprint' n (Infix obj ops) =
           merge xs ((_, y):ys) = append y xs ++ ys
 
 pprint' n (Unary op obj) =
-    prepend ('(' : op ++ " ") $ append ")" $ pprint' n obj
+    prepend (op ++ " (") $ append ")" $ pprint' n obj
 
 pprint' n (Lambda ids obj) = prepend header $ pprint' n obj
     where header = '\\' : unwords ids ++ " -> "

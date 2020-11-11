@@ -45,7 +45,7 @@ lambda :: ObjectParser
 lambda = curled $ Lambda <$> option [] (try args) <*> mainParser
     where args = many ident <* matchOp "->"
 
-comma = T.comma *> continue
+comma = T.comma <* continue
 operator = T.operator <* continue
 matchOp op = T.matchOp op <* continue
 
