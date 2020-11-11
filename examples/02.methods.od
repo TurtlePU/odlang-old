@@ -1,0 +1,15 @@
+"Method is called by putting it before an object:"
+
+    factorial 5
+
+"All parameters, if any, are named. The expression below is the same as
+`array.map(to=halved)` in Python or `array.map({ to: halved })` in JS:"
+
+    map array to halved
+
+"You can call method on result of expression via comma:"
+
+    map array to halved, leave only prime
+
+"By the way, this file parses too. If you want, you can try verbose output:
+`stack run <02.methods.od -- -v`"

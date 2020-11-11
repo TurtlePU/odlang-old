@@ -1,0 +1,14 @@
+"This is a string."
+"Strings are
+    M
+    U
+    L
+    T
+    I
+    L
+    I
+    N
+    E."
+"By the way, this file parses succesfully, check via `stack run <01.strings.od`.
+It should produce an object which is a sequence of 3 strings. That's because
+expressions in a sequence are separated either via `;` or via `\\n`."
