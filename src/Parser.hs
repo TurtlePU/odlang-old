@@ -20,19 +20,18 @@ mainParser = flatSeq . unDo <$> chainOrDo `sepEndBy` sep
     where chainOrDo = Left <$> try doExpr <|> Right <$> chain
 
 doExpr :: OdParser DoExpr
-doExpr = DoExpr <$> ident <*> ident <* matchOp "<-" <*> methodTail
+doExpr = DoExpr <$> ident <*> ident <* matchOp "<-" <*> methodTail many1
 
 chain :: ObjectParser
 chain = flatChain <$> infixx <*> many (comma *> methodCall)
-    where methodCall = (,) <$> ident <*> methodTail
+    where methodCall = (,) <$> ident <*> methodTail many
 
 infixx :: ObjectParser
 infixx = flatInfix <$> operand <*> many ((,) <$> operator <*> operand)
     where operand = try canonicCall <|> unary
-          canonicCall = Call <$> ident <*> recurse <*> methodTail
+          canonicCall = Call <$> ident <*> recurse <*> methodTail many
 
-methodTail :: OdParser [(Ident, Object)]
-methodTail = (++) <$> many arg <*> option [] bools
+methodTail manyf = (++) <$> manyf arg <*> option [] bools
     where arg = (,) <$> ident <*> unary
           bools = deBool <$> braced (ident `sepEndBy` comma)
 
