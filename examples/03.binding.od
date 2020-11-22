@@ -1,0 +1,9 @@
+"You can bind value to the name via `let` expression:"
+
+    let x = 1;
+
+"Initialization can be omit, but only if you initialize variable before usage!"
+
+    let x
+    "..."
+    x = 1

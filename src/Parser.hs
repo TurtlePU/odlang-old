@@ -64,5 +64,5 @@ braced = betweenBr '(' ')'
 curled = betweenBr '{' '}'
 squared = betweenBr '[' ']'
 
-betweenBr op cl = between (brace op *> continue) (brace cl)
+betweenBr op cl = between (brace op *> continue) (continue *> brace cl)
 continue = optional sep

@@ -2,13 +2,13 @@
 put inside { curly brackets }, and are separated by arrow. If list of arguments
 is empty, arrow can be omit, too."
 
-map array to { x -> x + 2 }
+    map [1, 2, 3] to { x -> x + 2 }
 
-if todayIsABigDay then {
-    print "Today is a big day!"
-} else {
-    print "Don't worry, today is okay, too."
-}
+    if todayIsABigDay then {
+        print "Today is a big day!"
+    } else {
+        print "Don't worry, today is okay, too."
+    }
 
 "As you can see, if-then-else is a method call on a boolean. But it looks pretty
 much the same as a normal if-then-else!"

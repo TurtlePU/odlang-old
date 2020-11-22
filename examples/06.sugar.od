@@ -1,0 +1,46 @@
+"There is a bit of syntactic sugar in Od, too. Well, we mentioned comma before
+--- it is, of cource, a syntactic sugar over braces. Let's move on to more
+sophisticated ones.
+The first one is a shorthand for boolean arguments in a method. Instead of
+writing both argument name and `true`, you can write only the name:"
+
+    run process quietly true killOnClose true
+
+    run process (quietly, killOnClose)
+
+"The second one is a shorthand for arguments in a method which are bound to the
+variable which has the same name as argument. Instead of repeating the same
+word, you can write it exactly once:"
+
+    fit model X X y y
+
+    fit model [X, y]
+
+"The third pinch of syntactic sugar is quite similar to the do-notation from
+Haskell. But don't be afraid: it's simple. The gist of it is: instead of passing
+a callback to a method call, let us pretend that the remaining part of a block
+is a callback. No better way to explain this than with examples, so here we have
+two equivalent pieces of code:"
+
+    {
+        await px then { x ->
+            await py then { y ->
+                x + y
+            }
+        }
+    }
+
+    {
+        then x <- await px
+        then y <- await py
+        x + y
+    }
+
+"The braces are necessary because we don't want the remainder of this file to be
+inside of a callback, do we?"
+
+"At last, let's flex our declarative muscles a little."
+
+    then json <- await (fetch "example.com")
+    print (map json to xml, sanitize)
+    flex muscles (declaratively)

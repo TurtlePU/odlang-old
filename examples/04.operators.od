@@ -1,0 +1,49 @@
+"There are two kinds of operators in Od: infix and unary.
+Unary operator is a string of special characters put before an object.
+The example below is a subsequent application of two unary operators:"
+
+    ++ ! a
+
+"Infix operator is put between an arbitrary number of operands. The
+associativity will be decided by the callee (the first operand). The following
+example consists of one infix operator named `+ + *`:"
+
+    a + b + c * d
+
+"Strangely enough, expression `a + b` becomes ambiguous: is it `+` applied to
+`a` and `b` or `(+b).a()`? OdLang decides it is the former. To really mean the
+latter, use braces or commas:"
+
+    a + b
+
+    a (+ b)
+
+    + b, a
+
+"Note that `=` in `let` statement is not an infix operator --- the following
+does not do what you expect it to do:"
+
+    let a = b = 5
+
+"With braces it becomes:"
+
+    let a = (b = 5)
+
+"P.S. maybe it is worth forbidding to define `=` infix operator. Or fix the set
+of possible operators altogether?.."
+
+"While we're at it, let's talk about precedence. Unary operators have the
+highest priority, excluding the case discussed before (callee of the method);
+then comes the method call; infix operators are next; comma is right after;
+`let` statement has the lowest priority. Note that there is no priority between
+infix operators!
+As an exercise, guess the priority in expressions below. Use the parser to check
+your answers."
+
+    factorial 3 + -4
+
+    -3 + 4, factorial
+
+    on inbox print -1
+
+    let value = "a" + "b", capitalize
