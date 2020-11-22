@@ -42,4 +42,4 @@ strSlash = char '\\' *> choice
 
 special = " \t\\\r\n;,\""
 braces = "()[]{}"
-operators = "=+-*|/&!<.>"
+operators = "=+-*|/&!<.>@~"
