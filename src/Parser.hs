@@ -37,7 +37,7 @@ infixx = flatInfix <$> operand <*> many ((,) <$> operator <*> operand)
     where operand = try canonicCall <|> unary
           canonicCall = Call <$> ident <*> recurse <*> methodTail many
 
-methodTail manyf = cc3 <$> option [] named <*> manyf arg <*> option [] bools
+methodTail manyf = cc3 <$> manyf arg <*> option [] named <*> option [] bools
     where arg = (,) <$> ident <*> unary
           named = squared $ dupId <$> ident `sepEndBy` comma
           bools = braced $ deBool <$> ident `sepEndBy` comma
