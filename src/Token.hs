@@ -27,6 +27,9 @@ type LexemToken = (OdLexem, SourcePos)
 odToken :: (OdLexem -> Maybe a) -> Parsec [LexemToken] st a
 odToken = token (show . fst) snd . (. fst)
 
+guardP :: (a -> Bool) -> ParsecT s u m a -> ParsecT s u m ()
+guardP = flip (>>=) . (guard .)
+
 sep = odToken f
     where f Sep = Just ()
           f _ = Nothing
@@ -43,7 +46,7 @@ operator = odToken f
     where f (Op s) = Just s
           f _ = Nothing
 
-matchOp op = operator >>= guard . (== op)
+matchOp op = guardP (== op) operator
 
 objterm = odToken f
     where f (ObjLexem t) = Just t
@@ -57,3 +60,5 @@ notIdent = odToken f
     where f (ObjLexem (Id _)) = Nothing
           f (ObjLexem x) = Just x
           f _ = Nothing
+
+matchId id = guardP (== id) ident
