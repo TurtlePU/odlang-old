@@ -12,34 +12,29 @@ odlex = optional ws *> optional sep *> lexem' `sepEndBy` ws <* eof
 
 ws = noslash *> optional slash
     where noslash = skipMany $ oneOf " \t"
-          slash = char '\\' *> skipMany (oneOf " \t\\\r\n")
+          slash = char '\\' *> skipMany (oneOf spaceOrSlash)
 
 sep = many1 (oneOf ";\r\n") `sepEndBy1` ws
 
-lexem = choice
-    [ Sep <$ sep
-    , Com <$ char ','
-    , Br <$> oneOf braces
-    , Op <$> many1 (oneOf operators)
-    , Term <$> term
-    ]
+lexem = Sep <$ sep
+    <|> Com <$ char ','
+    <|> Br <$> oneOf braces
+    <|> Op <$> many1 (oneOf operators)
+    <|> Term <$> term
 
-term = choice
-    [ OdInt <$> many1 digit
-    , Str <$> between (char '"') (char '"') (many $ strContent)
-    , Id <$> many1 (noneOf $ special ++ braces ++ operators)
-    ]
+term = OdInt <$> many1 digit
+    <|> Str <$> between (char '"') (char '"') (many $ strContent)
+    <|> Id <$> many1 (noneOf $ special ++ braces ++ operators)
 
-strContent = strSlash <|> noneOf "\""
+strContent = (char '\\' *> shielded) <|> noneOf "\""
 
-strSlash = char '\\' *> choice
-    [ char '\\'
-    , char '"'
-    , '\n' <$ char 'n'
-    , '\r' <$ char 'r'
-    , '\t' <$ char 't'
-    ]
+shielded = char '\\'
+    <|> char '"'
+    <|> '\n' <$ char 'n'
+    <|> '\r' <$ char 'r'
+    <|> '\t' <$ char 't'
 
-special = " \t\\\r\n;,\""
+spaceOrSlash = " \t\\\r\n"
+special = spaceOrSlash ++ ";,\""
 braces = "()[]{}"
 operators = "=+-*|/&!<.>@~"
