@@ -5,6 +5,7 @@ import Token
 data Object
     = Literal ObjTerm
     | Seq [Object]
+    | Array [Object]
     | Call Ident Object [(Ident, Object)]
     | Infix Object [(Operator, Object)]
     | Unary Operator Object
@@ -23,8 +24,12 @@ pprint' n (Literal term) =
     [ (n, printt term) ]
 
 pprint' n (Seq objs) =
-    (n, "[") : concatMap app objs ++ [ (n, "]") ]
+    (n, "Seq [") : concatMap app objs ++ [ (n, "]") ]
     where app obj = append ";" $ pprint' (n + 1) obj
+
+pprint' n (Array objs) =
+    (n, "Arr [") : concatMap app objs ++ [ (n, "]") ]
+    where app obj = append "," $ pprint' (n + 1) obj
 
 pprint' n (Call met obj []) = append (")." ++ met) $ prepend "(" $ pprint' n obj
 

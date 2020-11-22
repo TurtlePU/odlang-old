@@ -9,6 +9,9 @@ import Token
 deBool :: [Ident] -> [(Ident, Object)]
 deBool = map (, lit "true")
 
+dupId :: [Ident] -> [(Ident, Object)]
+dupId = map $ (,) <$> id <*> lit
+
 data DoExpr = DoExpr Ident Ident [(Ident, Object)]
 
 unDo :: [Either DoExpr Object] -> [Object]

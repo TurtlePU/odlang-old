@@ -31,15 +31,20 @@ infixx = flatInfix <$> operand <*> many ((,) <$> operator <*> operand)
     where operand = try canonicCall <|> unary
           canonicCall = Call <$> ident <*> recurse <*> methodTail many
 
-methodTail manyf = (++) <$> manyf arg <*> option [] bools
+methodTail manyf = cc3 <$> option [] named <*> manyf arg <*> option [] bools
     where arg = (,) <$> ident <*> unary
-          bools = deBool <$> braced (ident `sepEndBy` comma)
+          named = squared $ dupId <$> ident `sepEndBy` comma
+          bools = braced $ deBool <$> ident `sepEndBy` comma
+          cc3 a b c = a ++ b ++ c
 
 unary :: ObjectParser
 unary = flatUnary <$> many operator <*> recurse
 
 recurse :: ObjectParser
-recurse = braced mainParser <|> lambda <|> Literal <$> objterm
+recurse = braced mainParser <|> array <|> lambda <|> Literal <$> objterm
+
+array :: ObjectParser
+array = squared $ Array <$> infixx `sepEndBy` comma
 
 lambda :: ObjectParser
 lambda = curled $ Lambda <$> option [] (try args) <*> mainParser
@@ -51,6 +56,7 @@ matchOp op = T.matchOp op <* continue
 
 braced = betweenBr '(' ')'
 curled = betweenBr '{' '}'
+squared = betweenBr '[' ']'
 
 betweenBr op cl = between (brace op *> continue) (brace cl)
 continue = optional sep
