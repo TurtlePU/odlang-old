@@ -8,10 +8,10 @@ data OdLexem
     | Com
     | Br Char
     | Op Operator
-    | ObjLexem ObjTerm
+    | Term Term
     deriving Show
 
-data ObjTerm
+data Term
     = Real String
     | OdInt String
     | Str String
@@ -48,17 +48,17 @@ operator = odToken f
 
 matchOp op = guardP (== op) operator
 
-objterm = odToken f
-    where f (ObjLexem t) = Just t
+term = odToken f
+    where f (Term t) = Just t
           f _ = Nothing
 
 ident = odToken f
-    where f (ObjLexem (Id s)) = Just s
+    where f (Term (Id s)) = Just s
           f _ = Nothing
 
 notIdent = odToken f
-    where f (ObjLexem (Id _)) = Nothing
-          f (ObjLexem x) = Just x
+    where f (Term (Id _)) = Nothing
+          f (Term x) = Just x
           f _ = Nothing
 
 matchId id = guardP (== id) ident

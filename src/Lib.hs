@@ -5,9 +5,9 @@ import Control.Monad
 import Text.Parsec (ParseError)
 
 import Lexer (runLexer)
-import Object (Object, pprint)
+import Expression (Block, pprint)
 
 import qualified Parser as P
 
-runParser :: String -> String -> Either ParseError Object
+runParser :: String -> String -> Either ParseError Block
 runParser = (>=>) <$> runLexer <*> P.runParser

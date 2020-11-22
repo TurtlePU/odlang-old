@@ -1,7 +1,7 @@
 module Lexer (odlex, runLexer) where
 
 import Text.Parsec
-import Token (OdLexem(..), ObjTerm(..), LexemToken)
+import Token (OdLexem(..), Term(..), LexemToken)
 
 runLexer :: String -> String -> Either ParseError [LexemToken]
 runLexer = parse odlex
@@ -21,10 +21,10 @@ lexem = choice
     , Com <$ char ','
     , Br <$> oneOf braces
     , Op <$> many1 (oneOf operators)
-    , ObjLexem <$> objLexem
+    , Term <$> term
     ]
 
-objLexem = choice
+term = choice
     [ OdInt <$> many1 digit
     , Str <$> between (char '"') (char '"') (many $ strContent)
     , Id <$> many1 (noneOf $ special ++ braces ++ operators)

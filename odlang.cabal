@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9a5e875b07961de03e9426b6805caa914825d926dfc215fe0fd8d04a9fe5ba8d
+-- hash: 736380b13c4972273f16656f01ecbde6b799fff0e7d48e9d733465afde30c5f5
 
 name:           odlang
 version:        0.1.0.0
@@ -27,10 +27,10 @@ source-repository head
 
 library
   exposed-modules:
+      Expression
       FlatParse
       Lexer
       Lib
-      Object
       Parser
       Sugar
       Token
