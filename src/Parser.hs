@@ -39,8 +39,9 @@ infixx = flatInfix <$> operand <*> many ((,) <$> operator <*> operand)
 
 methodTail manyf = cc3 <$> manyf arg <*> option [] named <*> option [] bools
     where arg = (,) <$> ident <*> unary
-          named = squared $ dupId <$> ident `sepEndBy` comma
-          bools = braced $ deBool <$> ident `sepEndBy` comma
+          named = squared $ dupId <$> idents
+          bools = braced $ deBool <$> idents
+          idents = ident `sepEndBy` sep
           cc3 a b c = a ++ b ++ c
 
 unary :: ExpressionParser
@@ -50,7 +51,7 @@ recurse :: ExpressionParser
 recurse = braced chain <|> array <|> lambda <|> TermExpr <$> term
 
 array :: ExpressionParser
-array = squared $ Array <$> infixx `sepEndBy` comma
+array = squared $ Array <$> chain `sepEndBy` sep
 
 lambda :: ExpressionParser
 lambda = curled $ Lambda <$> option [] (try args) <*> block

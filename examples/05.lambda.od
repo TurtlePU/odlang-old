@@ -2,7 +2,7 @@
 put inside { curly brackets }, and are separated by arrow. If list of arguments
 is empty, arrow can be omit, too."
 
-    map [1, 2, 3] to { x -> x + 2 }
+    map [1; 2; 3] to { x -> x + 2 }
 
     if todayIsABigDay then {
         print "Today is a big day!"

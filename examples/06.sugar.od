@@ -6,7 +6,7 @@ writing both argument name and `true`, you can write only the name:"
 
     run process quietly true killOnClose true
 
-    run process (quietly, killOnClose)
+    run process (quietly; killOnClose)
 
 "The second one is a shorthand for arguments in a method which are bound to the
 variable which has the same name as argument. Instead of repeating the same
@@ -14,7 +14,7 @@ word, you can write it exactly once:"
 
     fit model X X y y
 
-    fit model [X, y]
+    fit model [X; y]
 
 "The third pinch of syntactic sugar is quite similar to the do-notation from
 Haskell. But don't be afraid: it's simple. The gist of it is: instead of passing
