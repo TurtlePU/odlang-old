@@ -1,0 +1,29 @@
+struct Observer[T] {
+    on_subscribe (() -> ()) -> ()
+    on_event T -> ()
+}
+
+struct Observable[T] {
+    observers List[Observer[T]]
+}
+
+fun subscribe Observer[T] to Observable[T] {
+    observer to { observers } ->
+        add observer to observers
+        observer's on_subscribe {
+            remove observer from observers
+        }
+}
+
+fun emit T from Observable[T] {
+    event from { observers } ->
+        for { on_event } in observers {
+            on_event event
+        }
+}
+
+/**
+ *  fun for (T -> ()) in List[T] { ... }
+ *  fun add T to List[T] { ... }
+ *  fun remove T from List[T] { ... }
+ */

@@ -1,0 +1,30 @@
+/** ???
+ * data Order {
+ *     Less
+ *     Equal
+ *     Greater
+ * } ???
+ */
+
+context Ord[T] {
+    fun cmp T to T -> Order
+}
+
+infix T == T -> bool in Ord[T] {
+    x == y -> cmp x to y, {
+        Equal -> true
+        _ -> false
+    }
+}
+
+fun binary_search T inside Slice[T] -> usize in Ord[T] {
+    x inside slice -> len slice, {
+        0 -> 1
+        1 -> if (x == slice 0) then { 0 } else { 1 }
+        n -> let m = n / 2. slice m, cmp to x, {
+            Less -> m + binary_search x inside: slice (m..)
+            Equal -> m
+            Greater -> binary_search x inside: slice (..m)
+        }
+    }
+}

@@ -1,0 +1,52 @@
+context Semigroup T {
+    T + T -> T
+}
+
+context Monoid T extends Semigroup T {
+    unit T
+}
+
+context Group T extends Monoid T {
+    -T -> T
+    x - y = x + (-y)
+}
+
+context Modulo T {
+    T % T -> T
+}
+
+each Semigroup T is Semigroup (Option T) {
+    Some x + Some y = x + y  // note the implicit conversion
+    Some x + _ = x
+    _ + y = y
+}
+
+each Semigroup T is Monoid (Option T) {
+    unit = None
+}
+
+struct Zn T {
+    mod T
+    // implicit context?
+    // explicit context?
+    // nothing?
+}
+
+show Zn T is Semigroup T {
+    x + y = x % self.mod + y % self.mod
+    // clone? copy? ref? how to disambiguate +?
+}
+
+fun factorial BigUInt -> BigUint {
+    0 -> 1
+    n -> n * self (n - 1)
+}
+
+fun factorial2 n = if (n == 0) 1 else: (n * self (n - 1))
+
+fun factorial3impl acc = BigUInt -> _ {
+    0 -> acc
+    n -> self (n * acc) (n - 1)
+}
+
+fun factorial3 = factorial3impl 0
