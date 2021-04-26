@@ -6,6 +6,7 @@ data Expression
     = TermExpr Term
     | Array [Expression]
     | Call Ident Expression [(Ident, Expression)]
+    | Index Expression Expression
     | Infix Expression [(Operator, Expression)]
     | Unary Operator Expression
     | Lambda [Ident] [Statement]
@@ -24,7 +25,7 @@ pprint = unlines . map (uncurry indent) . pprintBlock 0
 
 
 pprintBlock :: Int -> Block -> [(Int, String)]
-pprintBlock n b = (n, "{") : (concatMap (pprint'' $ n + 1) b) ++ [(n, "}")]
+pprintBlock n b = (n, "{") : concatMap (pprint'' $ n + 1) b ++ [(n, "}")]
 
 
 pprint'' :: Int -> Statement -> [(Int, String)]
@@ -47,17 +48,22 @@ pprint' n (Call met obj args) =
     where arg (id, obj) = prepend (id ++ ": ") $ pprint' (n + 1) obj
           header = append (")." ++ met ++ " {") $ prepend "(" $ pprint' n obj
 
+pprint' n (Index expr index) =
+    merge (append "[" (pprint' n expr)) (append "]" (pprint' (n + 1) index))
+
 pprint' n (Infix obj ops) =
     foldr merge [] $
         prepend "(" (append ")" (pprint' n obj)) : map (ppOps n) ops
-    where merge xs [] = xs
-          merge xs ((_, y):ys) = append y xs ++ ys
 
 pprint' n (Unary op obj) =
     prepend (op ++ " (") $ append ")" $ pprint' n obj
 
 pprint' n (Lambda ids obj) = prepend header $ pprintBlock n obj
     where header = '\\' : unwords ids ++ " -> "
+
+
+merge xs [] = xs
+merge xs ((_, y):ys) = append y xs ++ ys
 
 
 ppOps n (op, obj) = prepend (' ' : op ++ " (") $ append ")" $ pprint' n obj

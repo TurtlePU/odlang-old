@@ -16,5 +16,8 @@ flatInfix obj tail = Infix obj tail
 flatUnary :: [Operator] -> Expression -> Expression
 flatUnary = flip $ foldr Unary
 
+flatIndex :: Expression -> [Expression] -> Expression
+flatIndex = foldl' Index
+
 value :: Expression -> SugarStatement
 value expr = Pure $ Value expr

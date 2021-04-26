@@ -26,7 +26,7 @@ letExpr = LetExpr <$> binding <*> value
 
 doExpr :: OdParser SugarStatement
 doExpr = DoExpr <$> ident <*> binding <* matchOp "<-" <*> methodTail many1
-    where binding = braced (ident `sepEndBy` comma) <|> return <$> ident
+    where binding = squared idents <|> return <$> ident
 
 chain :: ExpressionParser
 chain = flatChain <$> infixx <*> many (comma *> methodCall)
@@ -35,17 +35,19 @@ chain = flatChain <$> infixx <*> many (comma *> methodCall)
 infixx :: ExpressionParser
 infixx = flatInfix <$> operand <*> many ((,) <$> operator <*> operand)
     where operand = try canonicCall <|> unary
-          canonicCall = Call <$> ident <*> recurse <*> methodTail many
+          canonicCall = Call <$> ident <*> index <*> methodTail many
 
 methodTail manyf = cc3 <$> manyf arg <*> option [] named <*> option [] bools
     where arg = (,) <$> ident <*> unary
-          named = squared $ dupId <$> idents
-          bools = braced $ deBool <$> idents
-          idents = ident `sepEndBy` sep
+          named = dupId <$> squared idents
+          bools = deBool <$> braced idents
           cc3 a b c = a ++ b ++ c
 
 unary :: ExpressionParser
-unary = flatUnary <$> many operator <*> recurse
+unary = flatUnary <$> many operator <*> index
+
+index :: ExpressionParser
+index = flatIndex <$> recurse <*> many (squared chain)
 
 recurse :: ExpressionParser
 recurse = braced chain <|> array <|> lambda <|> TermExpr <$> term
@@ -56,6 +58,8 @@ array = squared $ Array <$> chain `sepEndBy` sep
 lambda :: ExpressionParser
 lambda = curled $ Lambda <$> option [] (try args) <*> block
     where args = many ident <* matchOp "->"
+
+idents = ident `sepEndBy` sep
 
 comma = T.comma <* continue
 operator = T.operator <* continue
